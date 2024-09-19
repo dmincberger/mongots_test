@@ -2,14 +2,16 @@ import express, { Express, Request, Response } from "express";
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import bodyParser, { BodyParser } from "body-parser";
 import 'dotenv/config'
+import path from "path";
 
 const body_parser = bodyParser
 
 const app: Express = express();
 const port: number = 3000;
 app.use(bodyParser.json())
+app.use(express.static("static"))
 
-const uri: string = "mongodb+srv://TicketMaster:Qwerty123!@ticketcluster.zwtqu.mongodb.net/?retryWrites=true&w=majority&appName=TicketCluster";
+const uri: string = "mongodb+srv://TicketMaster:testpass@ticketcluster.zwtqu.mongodb.net/?retryWrites=true&w=majority&appName=TicketCluster";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     minPoolSize: 30,
@@ -47,7 +49,7 @@ app.get("/", async (req: Request, res: Response) => {
 
         const comments = client.db("sample_mflix").collection<Comment_pull>('comments')
         let first_comment = await comments.findOne({})
-        res.send(JSON.stringify(first_comment))
+        res.sendFile(path.join(__dirname, "static", "test.html"))
 
     } catch (e) {
         console.log("ERROR: " + e.error);
@@ -71,6 +73,10 @@ app.get("/api/many_tickets/", async (req: Request, res: Response) => {
         console.log("ERROR: " + e);
     }
 
+})
+
+app.get("/api/microsoft_auth", async (req: Request, res: Response) => {
+    res.send("Yay!")
 })
 
 app.patch("/api/edit_ticket", async (req: Request, res: Response) => {
