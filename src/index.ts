@@ -11,7 +11,7 @@ const port: number = 3000;
 app.use(bodyParser.json())
 app.use(express.static("static"))
 
-const uri: string = "mongodb+srv://TicketMaster:testpass@ticketcluster.zwtqu.mongodb.net/?retryWrites=true&w=majority&appName=TicketCluster";
+const uri: string = "mongodb://127.0.0.1:27017";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     minPoolSize: 30,
@@ -44,12 +44,11 @@ app.get("/", async (req: Request, res: Response) => {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        await client.db("tickety").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
-
-        const comments = client.db("sample_mflix").collection<Comment_pull>('comments')
-        let first_comment = await comments.findOne({})
-        res.sendFile(path.join(__dirname, "static", "test.html"))
+        // client.db("tickety").collection("tickets").insertOne({ "_id": new ObjectId(), "name": "test" })
+        console.log(await client.db("tickety").collection("tickets").find({}).toArray())
+        res.send("UDALO SIE")
 
     } catch (e) {
         console.log("ERROR: " + e.error);
@@ -57,44 +56,11 @@ app.get("/", async (req: Request, res: Response) => {
     }
 });
 
-app.get("/api/many_tickets/", async (req: Request, res: Response) => {
-    try {
-        const comments = await client.db("sample_mflix").collection('comments')
-        const id: ObjectId = new ObjectId("5a9427648b0beebeb69579e7")
-        const comment = await comments.findOne({ _id: id })
-        console.log(comment);
-
-        const comments_array = await comments.find().skip(20).limit(4).toArray();
-
-
-        res.json(comments_array)
-
-    } catch (e) {
-        console.log("ERROR: " + e);
-    }
-
-})
 
 app.get("/api/microsoft_auth", async (req: Request, res: Response) => {
     res.send("Yay!")
 })
 
-app.patch("/api/edit_ticket", async (req: Request, res: Response) => {
-    const api_body: Object = req.body
-    const given_id: string = req.body["id"]
-    const ticket_id: ObjectId = new ObjectId(given_id)
-
-    const comments = await client.db("sample_mflix").collection('comments')
-
-    await comments.updateOne({ _id: ticket_id },
-        {
-            "$set": { "name": "Filip Grudziecki" }
-        }, {})
-    const comment = await comments.findOne({ _id: ticket_id })
-
-    res.send(JSON.stringify(comment))
-
-})
 
 app.listen(port, () => {
     console.log(`[server]: Server is connectning at http://localhost:${port}`);
