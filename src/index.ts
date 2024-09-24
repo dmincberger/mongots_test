@@ -41,19 +41,20 @@ interface Comment_pull {
 
 
 app.get("/", async (req: Request, res: Response) => {
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-        // Send a ping to confirm a successful connection
-        await client.db("tickety").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-        // client.db("tickety").collection("tickets").insertOne({ "_id": new ObjectId(), "name": "test" })
-        console.log(await client.db("tickety").collection("tickets").find({}).toArray())
-        res.send("UDALO SIE")
+    // try {
+    //     // Connect the client to the server	(optional starting in v4.7)
+    //     // Send a ping to confirm a successful connection
+    //     await client.db("tickety").command({ ping: 1 });
+    //     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    //     // client.db("tickety").collection("tickets").insertOne({ "_id": new ObjectId(), "name": "test" })
+    //     console.log(await client.db("tickety").collection("tickets").find({}).toArray())
+    //     res.send("UDALO SIE")
 
-    } catch (e) {
-        console.log("ERROR: " + e.error);
+    // } catch (e) {
+    //     console.log("ERROR: " + e.error);
 
-    }
+    // }
+    res.sendFile(path.join(__dirname, "static", "test.html"))
 });
 
 

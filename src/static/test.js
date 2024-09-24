@@ -6,7 +6,7 @@ const config = {
     auth: {
         clientId: "58cae846-cb25-41bf-b0ce-138ec5de6e06",
         authority: "https://login.microsoftonline.com/b4fbc398-16ac-4774-b3d1-ba22bdd66fd2",
-        redirectUri: "http://localhost:3000"
+        redirectUri: "http://localhost:3000/api/microsoft_auth"
     }
 };
 
@@ -29,5 +29,7 @@ myMsal.handleRedirectPromise().then((response) => {
 
 // Event listener for the login button
 bt.addEventListener("click", function () {
+    console.log("clicked");
+
     myMsal.loginRedirect(loginRequest);
 });
